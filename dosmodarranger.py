@@ -308,7 +308,9 @@ class DDList(Frame):
 if __name__ == "__main__":
 
     userhome = expanduser('~')
-    profilepath = userhome + '\\Documents\\Larian Studios\\Divinity Original Sin 2 Definitive Edition\\PlayerProfiles'
+    datapath = userhome+'\\Documents\\Larian Studios\\Divinity Original Sin 2 Definitive Edition'
+    modpath = datapath + '\\Mods'
+    profilepath = datapath + '\\PlayerProfiles'
     profiles = [dI for dI in os.listdir(profilepath) if os.path.isdir(os.path.join(profilepath,dI))]
 
 
@@ -351,8 +353,15 @@ if __name__ == "__main__":
         ModNames[ uuid ] = name
 
     i = 1
+    for m in os.listdir(modpath):
+        uuid = m[m.rfind('_')+1:-4]
+        name = m[:m.rfind('_')]
+        ModNames[uuid] = name
+        
     for mod in ModList:
-        print( f'{i}: {ModNames[mod[0]]}' )
+
+        modName = ModNames.get(mod[0], 'Mod not loaded')
+        print( f'{i}: {modName}' )
         i += 1
 
 
@@ -375,7 +384,7 @@ if __name__ == "__main__":
         
     for i in range(len(ModList)):
         mod_uuid = ModList[ i ] [ 0 ]
-        mod_name = ModNames[ mod_uuid ]
+        mod_name = ModNames.get(mod_uuid, mod_uuid)
         
         item = sortable_list.create_item(value=i)
         label = Label(item, text=mod_name)
